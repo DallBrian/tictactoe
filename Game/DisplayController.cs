@@ -16,6 +16,7 @@ namespace TicTacToe
         public string PlayerTurnMessage => $"It's Player {State.CurrentPlayer.Name}'s turn";
         public string InvalidPlacementMessage => $"Invalid choice options '{string.Join(',', BoardState.ValidInput)}'";
         public string PlacementOccupiedMessage => "Space is already occupied!";
+        public string EnableAIMessage => "Would you like to play against the AI? Y/";
 
         private readonly GameState State;
 
@@ -53,6 +54,11 @@ namespace TicTacToe
 
             displayString.AppendLine(PlayerTurnMessage);
             return displayString.ToString().ReplaceLineEndings();
+        }
+
+        public void PromptToPlayAgainstAI()
+        {
+            Console.WriteLine(EnableAIMessage);
         }
     }
 }

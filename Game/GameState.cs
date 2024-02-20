@@ -2,9 +2,9 @@
 {
     public class GameState
     {
-        public Player CurrentPlayer { get; set; } = new() { Name = "1", Mark = "X" };
+        public Player CurrentPlayer { get; set; } = new() { Id = 1, Name = "1", Mark = "X" };
 
-        public Player NextPlayer { get; set; } = new() { Name = "2", Mark = "O" };
+        public Player NextPlayer { get; set; } = new() { Id = 2, Name = "2", Mark = "O" };
 
         public Errors Errors { get; } = new();
 

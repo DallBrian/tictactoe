@@ -79,12 +79,16 @@
 
         public void NewGame()
         {
-            State.CurrentPlayer = new() { Name = "1", Mark = "X" };
-            State.NextPlayer = new() { Name = "2", Mark = "O" };
+            if(State.CurrentPlayer.Id != 1) SwitchPlayers();
             State.Errors.Clear();
             State.IsOver = false;
             State.Winner = null;
             State.Board = new();
+        }
+
+        public void EnableAI()
+        {
+            State.NextPlayer.IsAI = true;
         }
     }
 }

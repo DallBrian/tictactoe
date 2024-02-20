@@ -7,6 +7,12 @@
             var gameState = new GameState();
             var display = new DisplayController(gameState);
             var game = new GameController(gameState);
+            var ai = new AIController(gameState);
+
+            display.PromptToPlayAgainstAI();
+            var playerInput = display.ReadPlayerInput();
+            if (playerInput.IsConfirmation())
+                game.EnableAI();
 
             do
             {
@@ -14,11 +20,13 @@
                 display.RenderGame();
                 while (!game.IsOver)
                 {
-                    var playerInput = display.ReadPlayerInput();
+                    playerInput = gameState.CurrentPlayer.IsAI
+                        ? ai.DetermineMove().ToString()
+                        : display.ReadPlayerInput();
                     game.MakeMove(playerInput);
                     display.RenderGame();
                 }
-            } while (display.ReadPlayerInput()?.ToLower() == "y");
+            } while (display.ReadPlayerInput().IsConfirmation());
         }
     }
 }

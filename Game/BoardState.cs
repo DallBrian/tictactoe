@@ -8,27 +8,47 @@
 
         public string[] Values => Squares.Select(s => s.Value).ToArray();
 
+        public Square[] GetRowAt(int index)
+        {
+            return Squares.Where(s => s.Row == Squares[index].Row).ToArray();
+        }
+
         public string[] GetRowContaining(int index)
         {
-            return Squares.Where(s => s.Row == Squares[index].Row).Select(s => s.Value).ToArray();
+            return GetRowAt(index).Select(s => s.Value).ToArray();
+        }
+
+        public Square[] GetColAt(int index)
+        {
+            return Squares.Where(s => s.Column == Squares[index].Column).ToArray();
         }
 
         public string[] GetColContaining(int index)
         {
-            return Squares.Where(s => s.Column == Squares[index].Column).Select(s => s.Value).ToArray();
+            return GetColAt(index).Select(s => s.Value).ToArray();
+        }
+
+        public Square[] GetLeftDiagonalSquares()
+        {
+            return Squares.Where(s => s.IsLeftDiagonal).ToArray();
         }
 
         public string[]? GetLeftDiagonalContaining(int index)
         {
             return Squares[index].IsLeftDiagonal
-                ? Squares.Where(s => s.IsLeftDiagonal).Select(s => s.Value).ToArray()
+                ? GetLeftDiagonalSquares().Select(s => s.Value).ToArray()
                 : null;
+        }
+
+        public Square[] GetRightDiagonalSquares()
+        {
+            return Squares.Where(s => s.IsRightDiagonal).ToArray();
         }
 
         public string[]? GetRightDiagonalContaining(int index)
         {
             return Squares[index].IsRightDiagonal
-                ? Squares.Where(s => s.IsRightDiagonal).Select(s => s.Value).ToArray()
+                ? GetRightDiagonalSquares().Select(s => s.Value).ToArray()
                 : null;
         }
         
@@ -50,6 +70,8 @@
 
     public class Square
     {
+        public int Index { get; }
+
         public int Row { get; }
 
         public int Column { get; }
@@ -81,6 +103,7 @@
             };
             IsLeftDiagonal = index is 0 or 4 or 8;
             IsRightDiagonal = index is 2 or 4 or 6;
+            Index = index;
         }
 
         public override string ToString()
