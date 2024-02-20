@@ -51,21 +51,6 @@
                 ? GetRightDiagonalSquares().Select(s => s.Value).ToArray()
                 : null;
         }
-        
-        public override string ToString()
-        {
-            return $"   |   |\r\n" +
-                   $" {Squares[0]} | {Squares[1]} | {Squares[2]}\r\n" +
-                   $"  1|  2|  3\r\n" +
-                   $"-----------\r\n" +
-                   $"   |   |\r\n" +
-                   $" {Squares[3]} | {Squares[4]} | {Squares[5]}\r\n" +
-                   $"  4|  5|  6\r\n" +
-                   $"-----------\r\n" +
-                   $"   |   |\r\n" +
-                   $" {Squares[6]} | {Squares[7]} | {Squares[8]}\r\n" +
-                   $"  7|  8|  9";
-        }
     }
 
     public class Square

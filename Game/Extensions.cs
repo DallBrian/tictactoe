@@ -34,5 +34,10 @@
         {
             return playerInput?.ToLower() == "y";
         }
+
+        public static string Center(this string str, int width)
+        {
+            return str.PadLeft(((width - 1) / 2) + 1).PadRight(width);
+        }
     }
 }

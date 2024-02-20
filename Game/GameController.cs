@@ -28,6 +28,8 @@
 
         private bool IsValidMove(string? placement)
         {
+            State.Errors.Clear();
+
             if (!BoardState.ValidInput.Contains(placement))
             {
                 State.Errors.InvalidPlacement = true;

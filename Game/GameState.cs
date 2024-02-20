@@ -25,10 +25,6 @@
         {
             foreach (var propertyInfo in GetType().GetProperties())
                 propertyInfo.SetValue(this, false);
-
-            //PlacementOutOfBounds = false;
-            //PlacementAlreadyOccupied = false;
-            //PlacementIsNotAnInteger = false;
         }
     }
 }

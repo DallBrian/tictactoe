@@ -15,7 +15,7 @@ namespace Tests
 
             var expected = new StringBuilder();
             expected.AppendLine(display.Title);
-            expected.AppendLine(gameState.Board.ToString());
+            expected.AppendLine(display.Board);
             expected.AppendLine(display.PlayerTurnMessage);
 
             Assert.That(display.GetCurrentDisplayState(), Is.EqualTo(expected.ToString().ReplaceLineEndings()));
@@ -32,7 +32,7 @@ namespace Tests
 
             var expected = new StringBuilder();
             expected.AppendLine(display.Title);
-            expected.AppendLine(gameState.Board.ToString());
+            expected.AppendLine(display.Board);
             expected.AppendLine(display.InvalidPlacementMessage);
             expected.AppendLine(display.PlayerTurnMessage);
 
@@ -51,7 +51,7 @@ namespace Tests
 
             var expected = new StringBuilder();
             expected.AppendLine(display.Title);
-            expected.AppendLine(gameState.Board.ToString());
+            expected.AppendLine(display.Board);
             expected.AppendLine(display.PlacementOccupiedMessage);
             expected.AppendLine(display.PlayerTurnMessage);
 
@@ -73,7 +73,7 @@ namespace Tests
 
             var expected = new StringBuilder();
             expected.AppendLine(display.Title);
-            expected.AppendLine(gameState.Board.ToString());
+            expected.AppendLine(display.Board);
             expected.AppendLine(display.WinnerMessage);
             expected.AppendLine(display.PlayAgainMessage);
 

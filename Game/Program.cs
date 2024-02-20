@@ -9,6 +9,7 @@
             var game = new GameController(gameState);
             var ai = new AIController(gameState);
 
+            display.InitializeConsole();
             display.PromptToPlayAgainstAI();
             var playerInput = display.ReadPlayerInput();
             if (playerInput.IsConfirmation())
