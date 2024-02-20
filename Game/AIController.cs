@@ -11,8 +11,8 @@
 
         public int DetermineMove()
         {
-            var topIndex = 0;
-            var totalPossibleWins = 0;
+            var topIndex = -1;
+            var totalPossibleWins = -1;
 
             for (var i = 0; i < 9; i++)
             {
