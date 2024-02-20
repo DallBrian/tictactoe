@@ -1,15 +1,8 @@
 ﻿namespace TicTacToe
 {
-    public class Board
+    public class BoardState
     {
-        private readonly (int Left, int Top) cursorPosition;
-
-        public Board((int Left, int Top) cursorPosition = default)
-        {
-            this.cursorPosition = cursorPosition;
-        }
-
-        public static string[] ValidInput = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        public static readonly string[] ValidInput = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
         public Square[] Squares = { new(0), new(1), new(2), new(3), new(4), new(5), new(6), new(7), new(8) };
 
@@ -38,13 +31,7 @@
                 ? Squares.Where(s => s.IsRightDiagonal).Select(s => s.Value).ToArray()
                 : null;
         }
-
-        public void Refresh()
-        {
-            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
-            Console.WriteLine(this);
-        }
-
+        
         public override string ToString()
         {
             return $"   |   |\r\n" +
@@ -57,18 +44,23 @@
                    $"-----------\r\n" +
                    $"   |   |\r\n" +
                    $" {Squares[6]} | {Squares[7]} | {Squares[8]}\r\n" +
-                   $"  7|  8|  9\r\n";
+                   $"  7|  8|  9";
         }
     }
 
     public class Square
     {
         public int Row { get; }
+
         public int Column { get; }
+
         public bool IsLeftDiagonal { get; }
+
         public bool IsRightDiagonal { get; }
 
         public string Value { get; set; }
+
+        public bool IsEmpty => Value == "";
 
         public Square(int index)
         {

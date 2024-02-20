@@ -1,23 +1,24 @@
-﻿namespace TicTacToe // Note: actual namespace depends on the project name.
+﻿namespace TicTacToe
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            var gameState = new GameState();
+            var display = new DisplayController(gameState);
+            var game = new GameController(gameState);
+
             do
             {
-                Console.Clear();
-                var game = new Game();
+                game.NewGame();
+                display.RenderGame();
                 while (!game.IsOver)
                 {
-                    game.ReadInput();
+                    var playerInput = display.ReadPlayerInput();
+                    game.MakeMove(playerInput);
+                    display.RenderGame();
                 }
-
-                game.Prompt(game.Winner is null
-                    ? "Draw! No winner this time."
-                    : $"Congrats Player {game.Winner} you won!");
-                Console.WriteLine("Play Again? Y/");
-            } while (Console.ReadLine().ToLower() == "y");
+            } while (display.ReadPlayerInput()?.ToLower() == "y");
         }
     }
 }
