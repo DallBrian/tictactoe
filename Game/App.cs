@@ -59,6 +59,10 @@ namespace TicTacToe
                     case "3" when GameState.IsPaused:
                         Game.ResumeGame();
                         break;
+                    case "+": Display.EnlargeBoard();
+                        break;
+                    case "-": Display.ShrinkBoard();
+                        break;
                     default: Game.MakeMove(playerInput);
                         break;
                 }

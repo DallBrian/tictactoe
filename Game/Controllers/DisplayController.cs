@@ -13,7 +13,7 @@ namespace TicTacToe.Controllers
                                "\r\n                                              ";
 
         private int TitleWidth => Title.Split(Environment.NewLine)[1].Length;
-        private int SquareWidth { get; set; } = 9;
+        private int SquareWidth => (int)Math.Round(SquareHeight * 1.5, 0);
         private int SquareHeight { get; set; } = 5;
 
         private int BoardWidth => SquareWidth * 3 + 2;
@@ -78,7 +78,18 @@ namespace TicTacToe.Controllers
         {
             State = gameState;
         }
-        
+
+        public void EnlargeBoard()
+        {
+            SquareHeight+=2;
+        }
+
+        public void ShrinkBoard()
+        {
+            if (SquareHeight == 3) return;
+            SquareHeight-=2;
+        }
+
         public string GetCurrentDisplayState()
         {
             var displayString = new StringBuilder();

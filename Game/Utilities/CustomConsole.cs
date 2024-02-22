@@ -15,8 +15,10 @@
         
         public void RenderScreen(string display)
         {
+            //Weird issue using the terminal app causing clear to not clear everything https://stackoverflow.com/questions/75471607/console-clear-doesnt-clean-up-the-whole-console
             Console.Clear();
-            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("\x1b[3J");
+            Console.Clear();
             Console.WriteLine(display);
         }
     }
