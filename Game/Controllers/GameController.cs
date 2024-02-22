@@ -1,4 +1,6 @@
-﻿namespace TicTacToe
+﻿using TicTacToe.Models;
+
+namespace TicTacToe.Controllers
 {
     public class GameController
     {
@@ -45,7 +47,7 @@
 
             return true;
         }
-        
+
         private void MarkBoardForCurrentPlayer(int index)
         {
             State.Board.Squares[index].Value = State.CurrentPlayer.Mark;
@@ -56,13 +58,15 @@
             if (!MadeWinningMove(index)) return;
 
             State.IsOver = true;
+            State.IsActiveGame = false;
             State.Winner = State.CurrentPlayer;
         }
 
         private void CheckIfNoValidMovesLeft()
         {
-            if (State.Board.Squares.All(s => s.Value != string.Empty))
-                State.IsOver = true;
+            if (State.Board.Squares.Any(s => s.Value == string.Empty)) return;
+            State.IsOver = true;
+            State.IsActiveGame = false;
         }
 
         private bool MadeWinningMove(int index)
@@ -78,19 +82,35 @@
         {
             (State.CurrentPlayer, State.NextPlayer) = (State.NextPlayer, State.CurrentPlayer);
         }
+        
+        public void PauseGame()
+        {
+            State.IsPaused = true;
+        }
+
+        public void ResumeGame()
+        {
+            State.IsPaused = false;
+        }
 
         public void NewGame()
         {
-            if(State.CurrentPlayer.Id != 1) SwitchPlayers();
+            State.IsActiveGame = true;
+            if (State.CurrentPlayer.Id != 1) SwitchPlayers();
             State.Errors.Clear();
             State.IsOver = false;
             State.Winner = null;
             State.Board = new();
         }
 
-        public void EnableAI()
+        public void ToggleAI()
         {
-            State.NextPlayer.IsAI = true;
+            //Always targeting player 2 as the AI
+            if (State.NextPlayer.Id == 2)
+                State.NextPlayer.IsAI = !State.NextPlayer.IsAI;
+            else
+                State.CurrentPlayer.IsAI = !State.CurrentPlayer.IsAI;
         }
+
     }
 }

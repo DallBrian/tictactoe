@@ -1,5 +1,6 @@
-﻿namespace TicTacToe
+﻿namespace TicTacToe.Models
 {
+    [Serializable]
     public class GameState
     {
         public Player CurrentPlayer { get; set; } = new() { Id = 1, Name = "1", Mark = "X" };
@@ -13,6 +14,10 @@
         public Player? Winner { get; set; } = null;
 
         public BoardState Board { get; set; } = new();
+
+        public bool IsActiveGame { get; set; } = false;
+
+        public bool IsPaused { get; set; } = false;
     }
 
     public class Errors

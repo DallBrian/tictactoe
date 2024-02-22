@@ -1,18 +1,19 @@
 ﻿using System.Text;
 using NUnit.Framework;
-using TicTacToe;
+using TicTacToe.Controllers;
+using TicTacToe.Models;
 
-namespace Tests
+namespace Tests.Tests
 {
-    [TestFixture]
-    public class DisplayTests
+    public class DisplayTests : BaseTest
     {
         [Test]
         public void New_Game_Displays()
         {
-            var gameState = new GameState();
-            var display = new DisplayController(gameState);
+            var app = Start();
+            app.NewGame();
 
+            var display = app.App.Display;
             var expected = new StringBuilder();
             expected.AppendLine(display.Title);
             expected.AppendLine(display.Board);
@@ -28,6 +29,7 @@ namespace Tests
             var display = new DisplayController(gameState);
             var game = new GameController(gameState);
 
+            game.NewGame();
             game.MakeMove("a");
 
             var expected = new StringBuilder();
@@ -46,6 +48,7 @@ namespace Tests
             var display = new DisplayController(gameState);
             var game = new GameController(gameState);
 
+            game.NewGame();
             game.MakeMove("1");
             game.MakeMove("1");
 
@@ -65,6 +68,7 @@ namespace Tests
             var display = new DisplayController(gameState);
             var game = new GameController(gameState);
 
+            game.NewGame();
             game.MakeMove("1");
             game.MakeMove("4");
             game.MakeMove("2");
@@ -75,7 +79,25 @@ namespace Tests
             expected.AppendLine(display.Title);
             expected.AppendLine(display.Board);
             expected.AppendLine(display.WinnerMessage);
-            expected.AppendLine(display.PlayAgainMessage);
+            expected.AppendLine(display.NewGameOption);
+            expected.AppendLine(display.EnableAIOption);
+
+            Assert.That(display.GetCurrentDisplayState(), Is.EqualTo(expected.ToString().ReplaceLineEndings()));
+        }
+
+        [Test]
+        public void On_Menu_Screen_When_Game_Not_Active()
+        {
+            var gameState = new GameState();
+            var display = new DisplayController(gameState);
+
+            Assert.That(gameState.IsActiveGame, Is.False);
+
+            var expected = new StringBuilder();
+            expected.AppendLine(display.Title);
+            expected.AppendLine(display.Board);
+            expected.AppendLine(display.NewGameOption);
+            expected.AppendLine(display.ToggleAIOption);
 
             Assert.That(display.GetCurrentDisplayState(), Is.EqualTo(expected.ToString().ReplaceLineEndings()));
         }

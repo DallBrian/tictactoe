@@ -1,4 +1,7 @@
-﻿namespace TicTacToe
+﻿using TicTacToe.Models;
+using TicTacToe.Utilities;
+
+namespace TicTacToe.Controllers
 {
     public class AIController
     {

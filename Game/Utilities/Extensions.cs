@@ -1,4 +1,6 @@
-﻿namespace TicTacToe
+﻿using TicTacToe.Models;
+
+namespace TicTacToe.Utilities
 {
     public static class Extensions
     {
@@ -29,15 +31,10 @@
                     wins++;
             return wins;
         }
-
-        public static bool IsConfirmation(this string? playerInput)
-        {
-            return playerInput?.ToLower() == "y";
-        }
-
+        
         public static string Center(this string str, int width)
         {
-            return str.PadLeft(((width - 1) / 2) + 1).PadRight(width);
+            return str.PadLeft(((width - str.Length) / 2) + str.Length).PadRight(width);
         }
     }
 }

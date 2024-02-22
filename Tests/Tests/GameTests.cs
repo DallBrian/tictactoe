@@ -1,20 +1,23 @@
 ﻿using NUnit.Framework;
-using TicTacToe;
+using TicTacToe.Controllers;
+using TicTacToe.Models;
 
-namespace Tests
+namespace Tests.Tests
 {
-    [TestFixture]
-    public class GameTests
+    public class GameTests : BaseTest
     {
         [Test]
         public void NewGameBoardDisplaysEmpty()
         {
-            var board = new GameController(new()).Board;
+            var app = Start();
+            app.NewGame();
+
+            var board = app.App.Game.Board;
             Assert.That(board.Values, Is.EqualTo(new[] { "", "", "", "", "", "", "", "", "" }));
         }
 
-        [TestCase("1"), TestCase("2"), TestCase("3"), 
-         TestCase("4"), TestCase("5"), TestCase("6"), 
+        [TestCase("1"), TestCase("2"), TestCase("3"),
+         TestCase("4"), TestCase("5"), TestCase("6"),
          TestCase("7"), TestCase("8"), TestCase("9")]
         public void Player1CanInputXAndPassTurn(string input)
         {

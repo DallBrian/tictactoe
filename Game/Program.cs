@@ -1,33 +1,15 @@
-﻿namespace TicTacToe
+﻿using TicTacToe.Utilities;
+
+namespace TicTacToe
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            var gameState = new GameState();
-            var display = new DisplayController(gameState);
-            var game = new GameController(gameState);
-            var ai = new AIController(gameState);
-
-            display.InitializeConsole();
-            display.PromptToPlayAgainstAI();
-            var playerInput = display.ReadPlayerInput();
-            if (playerInput.IsConfirmation())
-                game.EnableAI();
-
-            do
-            {
-                game.NewGame();
-                display.RenderGame();
-                while (!game.IsOver)
-                {
-                    playerInput = gameState.CurrentPlayer.IsAI
-                        ? ai.DetermineMove().ToString()
-                        : display.ReadPlayerInput();
-                    game.MakeMove(playerInput);
-                    display.RenderGame();
-                }
-            } while (display.ReadPlayerInput().IsConfirmation());
+            var console = new CustomConsole();
+            var app = new App(console);
+            app.Run();
+            while(app.IsRunning) { }
         }
     }
 }

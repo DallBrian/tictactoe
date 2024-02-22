@@ -1,6 +1,8 @@
 ﻿using System.Text;
+using TicTacToe.Models;
+using TicTacToe.Utilities;
 
-namespace TicTacToe
+namespace TicTacToe.Controllers
 {
     public class DisplayController
     {
@@ -11,10 +13,11 @@ namespace TicTacToe
                                "\r\n                                              ";
 
         private int TitleWidth => Title.Split(Environment.NewLine)[1].Length;
-        private int SquareWidth => 9;
-        private int SquareHeight => 5;
-        private int BoardWidth => (SquareWidth * 3) + 2;
-        private int BoardLeftPadding => ((TitleWidth - BoardWidth) / 2) + BoardWidth;
+        private int SquareWidth { get; set; } = 9;
+        private int SquareHeight { get; set; } = 5;
+
+        private int BoardWidth => SquareWidth * 3 + 2;
+        private int BoardLeftPadding => (TitleWidth - BoardWidth) / 2 + BoardWidth;
         public string Board
         {
             get
@@ -35,7 +38,7 @@ namespace TicTacToe
                 var spacerRow = $"{string.Empty.PadLeft(BoardWidth, '-')}".PadLeft(BoardLeftPadding);
 
                 var emptyRowsNeededAbove = (SquareHeight - 1) / 2;
-                
+
                 void AppendRow(StringBuilder sb, int i1, int i2, int i3)
                 {
                     for (var i = 0; i < emptyRowsNeededAbove; i++)
@@ -56,16 +59,18 @@ namespace TicTacToe
             }
         }
 
-        public string DrawMessage => "Draw! No winner this time.";
-        public string WinnerMessage => $"Congrats Player {State.Winner?.Name} you won!";
-        public string PlayAgainMessage => "Play Again? Y/";
-        public string PlayerTurnMessage => $"It's Player {State.CurrentPlayer.Name}'s turn";
-        public string InvalidPlacementMessage => $"Invalid choice options '{string.Join(',', BoardState.ValidInput)}'";
-        public string PlacementOccupiedMessage => "Space is already occupied!";
-        public string EnableAIMessage => "Would you like to play against the AI? Y/";
+        public string DrawMessage => "Draw! No winner this time.".Center(TitleWidth);
+        public string WinnerMessage => $"Congrats Player {State.Winner?.Name} you won!".Center(TitleWidth);
+        public string PlayerTurnMessage => $"It's Player {State.CurrentPlayer.Name}'s turn".Center(TitleWidth);
+        public string InvalidPlacementMessage => $"Invalid choice options '{string.Join(',', BoardState.ValidInput)}'".Center(TitleWidth);
+        public string PlacementOccupiedMessage => "Space is already occupied!".Center(TitleWidth);
 
-        public int WindowWidth { get; set; } = 47;
-        public int WindowHeight { get; set; } = 20;
+        public string NewGameOption => "1 New Game".Center(TitleWidth);
+        public string DisableAIToggle => "2 Disable AI".Center(TitleWidth);
+        public string EnableAIOption => "2 Enable AI".Center(TitleWidth);
+        public string ToggleAIOption => State.NextPlayer.IsAI || State.CurrentPlayer.IsAI ? DisableAIToggle : EnableAIOption;
+        public string ResumeOption => "3 Resume".Center(TitleWidth);
+
 
         private readonly GameState State;
 
@@ -73,24 +78,7 @@ namespace TicTacToe
         {
             State = gameState;
         }
-
-        public void InitializeConsole()
-        {
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Console.ForegroundColor = ConsoleColor.Black;
-        }
-
-        public string? ReadPlayerInput()
-        {
-            return Console.ReadKey().KeyChar.ToString();
-        }
-
-        public void RenderGame()
-        {
-            Console.Clear();
-            Console.WriteLine(GetCurrentDisplayState());
-        }
-
+        
         public string GetCurrentDisplayState()
         {
             var displayString = new StringBuilder();
@@ -100,20 +88,20 @@ namespace TicTacToe
             if (State.IsOver)
             {
                 displayString.AppendLine(State.Winner is null ? DrawMessage : WinnerMessage);
-                displayString.AppendLine(PlayAgainMessage);
-                return displayString.ToString();
             }
 
-            if (State.Errors.InvalidPlacement) displayString.AppendLine(InvalidPlacementMessage);
-            if (State.Errors.PlacementAlreadyOccupied) displayString.AppendLine(PlacementOccupiedMessage);
+            if (State is { IsActiveGame: true, IsPaused: false })
+            {
+                if (State.Errors.InvalidPlacement) displayString.AppendLine(InvalidPlacementMessage);
+                if (State.Errors.PlacementAlreadyOccupied) displayString.AppendLine(PlacementOccupiedMessage);
 
-            displayString.AppendLine(PlayerTurnMessage);
+                displayString.AppendLine(PlayerTurnMessage);
+                return displayString.ToString().ReplaceLineEndings();
+            }
+            displayString.AppendLine(NewGameOption);
+            displayString.AppendLine(ToggleAIOption);
+            if (State is { IsActiveGame: true, IsPaused: true }) displayString.AppendLine(ResumeOption);
             return displayString.ToString().ReplaceLineEndings();
-        }
-
-        public void PromptToPlayAgainstAI()
-        {
-            Console.WriteLine(EnableAIMessage);
         }
     }
 }
