@@ -6,11 +6,11 @@ namespace TicTacToe.Controllers
 {
     public class DisplayController
     {
-        public string Title => "\r\n  _____ _       _____           _____         " +
-                               "\r\n |_   _(_)__ __|_   _|_ _ __ __|_   _|__  ___ " +
-                               "\r\n   | | | / _|___|| |/ _` / _|___|| |/ _ \\/ -_)" +
-                               "\r\n   |_| |_\\__|    |_|\\__,_\\__|    |_|\\___/\\___|" +
-                               "\r\n                                              ";
+        public string Title => "  _____ _       _____           _____         \r\n" +
+                               " |_   _(_)__ __|_   _|_ _ __ __|_   _|__  ___ \r\n" +
+                               "   | | | / _|___|| |/ _` / _|___|| |/ _ \\/ -_)\r\n" +
+                               "   |_| |_\\__|    |_|\\__,_\\__|    |_|\\___/\\___|\r\n" +
+                               "                                              \r\n";
 
         private int TitleWidth => Title.Split(Environment.NewLine)[1].Length;
         private int SquareWidth => (int)Math.Round(SquareHeight * 1.5, 0);

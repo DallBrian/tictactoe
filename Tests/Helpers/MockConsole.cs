@@ -16,14 +16,11 @@ namespace Tests.Helpers
 
         public string? ReadKey()
         {
-            while (Input is null)
-            {
-                IsAwaitingInput = true;
-                Thread.Sleep(10);
-            }
+            IsAwaitingInput = true;
+            while (Input is null) Thread.Sleep(10);
             var key = Input;
-            Input = null;
             IsAwaitingInput = false;
+            Input = null;
             return key;
         }
 
