@@ -46,7 +46,9 @@ namespace TicTacToe.Controllers
                     sb.AppendLine(CenteredRow(squares[i1].Value, squares[i2].Value, squares[i3].Value));
                     for (var i = 0; i < emptyRowsNeededAbove - 1; i++)
                         sb.AppendLine(emptyRow);
-                    sb.AppendLine(LeftAlignedRow((i1 + 1).ToString(), (i2 + 1).ToString(), (i3 + 1).ToString()));
+                    sb.AppendLine(LeftAlignedRow(squares[i1].GetDisplayValue(State.CurrentLayout),
+                        squares[i2].GetDisplayValue(State.CurrentLayout),
+                        squares[i3].GetDisplayValue(State.CurrentLayout)));
                 }
 
                 var board = new StringBuilder();
@@ -60,8 +62,9 @@ namespace TicTacToe.Controllers
         }
 
         public string DrawMessage => "Draw! No winner this time.".Center(TitleWidth);
-        public string WinnerMessage => $"Congrats Player {State.Winner?.Name} you won!".Center(TitleWidth);
-        public string PlayerTurnMessage => $"It's Player {State.CurrentPlayer.Name}'s turn".Center(TitleWidth);
+        public string WinnerMessage => $"Congrats {State.Winner?.Name} you won!".Center(TitleWidth);
+        public string AIWinsMessage => $"{State.CurrentPlayer.Name} lost to the AI".Center(TitleWidth);
+        public string PlayerTurnMessage => $"It's {State.CurrentPlayer.Name}'s turn".Center(TitleWidth);
         public string InvalidPlacementMessage => $"Invalid choice options '{string.Join(',', BoardState.ValidInput)}'".Center(TitleWidth);
         public string PlacementOccupiedMessage => "Space is already occupied!".Center(TitleWidth);
 
@@ -70,7 +73,7 @@ namespace TicTacToe.Controllers
         public string EnableAIOption => "2 Enable AI".Center(TitleWidth);
         public string ToggleAIOption => State.NextPlayer.IsAI || State.CurrentPlayer.IsAI ? DisableAIToggle : EnableAIOption;
         public string ResumeOption => "3 Resume".Center(TitleWidth);
-
+        public string CurrentLayoutOption => $"3 Layout: {State.CurrentLayout}".Center(TitleWidth);
 
         private readonly GameState State;
 
@@ -98,7 +101,8 @@ namespace TicTacToe.Controllers
 
             if (State.IsOver)
             {
-                displayString.AppendLine(State.Winner is null ? DrawMessage : WinnerMessage);
+                displayString.AppendLine(State.Winner is null ? DrawMessage :
+                    State.Winner.IsAI ? AIWinsMessage : WinnerMessage);
             }
 
             if (State is { IsActiveGame: true, IsPaused: false })
@@ -111,7 +115,7 @@ namespace TicTacToe.Controllers
             }
             displayString.AppendLine(NewGameOption);
             displayString.AppendLine(ToggleAIOption);
-            if (State is { IsActiveGame: true, IsPaused: true }) displayString.AppendLine(ResumeOption);
+            displayString.AppendLine(State is { IsActiveGame: true, IsPaused: true } ? ResumeOption : CurrentLayoutOption);
             return displayString.ToString().ReplaceLineEndings();
         }
     }

@@ -19,38 +19,37 @@ namespace TicTacToe.Controllers
 
         public void MakeMove(string? placement)
         {
-            if (!IsValidMove(placement)) return;
+            var matchingDisplaySquare =
+                State.Board.Squares.SingleOrDefault(s => s.GetDisplayValue(State.CurrentLayout) == placement);
 
-            var index = int.Parse(placement) - 1;
-            MarkBoardForCurrentPlayer(index);
-            CheckIfPlayerWon(index);
+            if (!IsValidMove(matchingDisplaySquare)) return;
+            if (!IsNotOccupied(matchingDisplaySquare)) return;
+
+            MarkBoardForCurrentPlayer(matchingDisplaySquare);
+            CheckIfPlayerWon(matchingDisplaySquare.Index);
             CheckIfNoValidMovesLeft();
             SwitchPlayers();
         }
 
-        private bool IsValidMove(string? placement)
+        private bool IsNotOccupied(Square square)
         {
             State.Errors.Clear();
-
-            if (!BoardState.ValidInput.Contains(placement))
-            {
-                State.Errors.InvalidPlacement = true;
-                return false;
-            }
-
-            var oneBasedIndex = int.Parse(placement);
-            if (!State.Board.Squares[oneBasedIndex - 1].IsEmpty)
-            {
-                State.Errors.PlacementAlreadyOccupied = true;
-                return false;
-            }
-
-            return true;
+            if (square.IsEmpty) return true;
+            State.Errors.PlacementAlreadyOccupied = true;
+            return false;
         }
 
-        private void MarkBoardForCurrentPlayer(int index)
+        private bool IsValidMove(Square? square)
         {
-            State.Board.Squares[index].Value = State.CurrentPlayer.Mark;
+            State.Errors.Clear();
+            if (square is not null) return true;
+            State.Errors.InvalidPlacement = true;
+            return false;
+        }
+
+        private void MarkBoardForCurrentPlayer(Square square)
+        {
+            square.Value = State.CurrentPlayer.Mark;
         }
 
         private void CheckIfPlayerWon(int index)
@@ -112,5 +111,11 @@ namespace TicTacToe.Controllers
                 State.CurrentPlayer.IsAI = !State.CurrentPlayer.IsAI;
         }
 
+        public void SwitchLayout()
+        {
+            var indexOfCurrentLayout = Layout.Layouts.ToList().IndexOf(State.CurrentLayout);
+            var indexOfNextLayout = indexOfCurrentLayout + 1 > Layout.Layouts.Length - 1 ? 0 : indexOfCurrentLayout + 1;
+            State.CurrentLayout = Layout.Layouts[indexOfNextLayout];
+        }
     }
 }

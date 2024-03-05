@@ -59,6 +59,9 @@ namespace TicTacToe
                     case "3" when GameState.IsPaused:
                         Game.ResumeGame();
                         break;
+                    case "3" when !GameState.IsActiveGame:
+                        Game.SwitchLayout();
+                        break;
                     case "+": Display.EnlargeBoard();
                         break;
                     case "-": Display.ShrinkBoard();
@@ -68,7 +71,7 @@ namespace TicTacToe
                 }
 
                 if (GameState.CurrentPlayer.IsAI && GameState is { IsActiveGame: true, IsPaused: false })
-                    Game.MakeMove(AI.DetermineMove().ToString());
+                    Game.MakeMove(GameState.Board.Squares[AI.DetermineMove()].GetDisplayValue(GameState.CurrentLayout));
 
             } while (true);
         }

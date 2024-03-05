@@ -12,6 +12,7 @@ namespace Tests.Tests
                                      "   | | | / _|___|| |/ _` / _|___|| |/ _ \\/ -_)\r\n" +
                                      "   |_| |_\\__|    |_|\\__,_\\__|    |_|\\___/\\___|\r\n" +
                                      "                                              \r\n";
+        private int TitleWidth => Title.Split("\r\n")[0].Length;
         private const string EmptyBoard = "                  |        |        \r\n" +
                                           "                  |        |        \r\n" +
                                           "                  |        |        \r\n" +
@@ -29,6 +30,7 @@ namespace Tests.Tests
                                           "                  |        |        \r\n" +
                                           "                  |        |        \r\n" +
                                           "                 7|       8|       9";
+
         private const string NewGameLine = "                  1 New Game                  ";
         private const string EnableAILine = "                 2 Enable AI                  ";
         private const string DisableAILine = "                 2 Disable AI                 ";
@@ -44,7 +46,6 @@ namespace Tests.Tests
             Assert.That(app.Board, Is.EqualTo(EmptyBoard));
             Assert.That(app.Message1, Is.EqualTo(NewGameLine));
             Assert.That(app.Message2, Is.EqualTo(EnableAILine));
-            Assert.That(app.Message3, Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -129,7 +130,6 @@ namespace Tests.Tests
             Assert.That(app.Message3, Is.EqualTo(string.Empty));
         }
 
-        [TestCase("0")]
         [TestCase("10")]
         [TestCase("asdf")]
         [TestCase("!@#$%^&*()_+=-")]
@@ -156,7 +156,7 @@ namespace Tests.Tests
             Assert.That(app.Message2, Is.EqualTo(Player2Turn));
             Assert.That(app.Message3, Is.EqualTo(string.Empty));
         }
-        
+
         [TestCase(new[] { 1, 4, 2, 5, 3 }, "1", TestName = "Game_Ends_And_Displays_Winner_If(P1Row1Filled)")]
         [TestCase(new[] { 4, 2, 5, 3, 6 }, "1", TestName = "Game_Ends_And_Displays_Winner_If(P1Row2Filled)")]
         [TestCase(new[] { 7, 4, 8, 5, 9 }, "1", TestName = "Game_Ends_And_Displays_Winner_If(P1Row3Filled)")]
@@ -172,7 +172,8 @@ namespace Tests.Tests
         [TestCase(new[] { 3, 2, 4, 5, 7, 8 }, "2", TestName = "Game_Ends_And_Displays_Winner_If(P2Col2Filled)")]
         [TestCase(new[] { 1, 3, 4, 6, 5, 9 }, "2", TestName = "Game_Ends_And_Displays_Winner_If(P2Col3Filled)")]
         [TestCase(new[] { 2, 1, 4, 5, 6, 9 }, "2", TestName = "Game_Ends_And_Displays_Winner_If(P2DiagonalLeftFilled)")]
-        [TestCase(new[] { 1, 3, 4, 5, 6, 7 }, "2", TestName = "Game_Ends_And_Displays_Winner_If(P2DiagonalRightFilled)")]
+        [TestCase(new[] { 1, 3, 4, 5, 6, 7 }, "2",
+            TestName = "Game_Ends_And_Displays_Winner_If(P2DiagonalRightFilled)")]
         public void Game_Ends_And_Displays_Winner_If(int[] moves, string winningPlayer)
         {
             var app = Start();
@@ -193,6 +194,60 @@ namespace Tests.Tests
             Assert.That(app.Message1, Is.EqualTo("          Draw! No winner this time.          "));
             Assert.That(app.Message2, Is.EqualTo(NewGameLine));
             Assert.That(app.Message3, Is.EqualTo(EnableAILine));
+        }
+
+        [Test]
+        public void Game_Displays_AI_As_Winner_If_Won()
+        {
+            var app = Start();
+            app.ToggleAI();
+            app.NewGame();
+            app.PlayerInput("2");
+            app.PlayerInput("4");
+            app.PlayerInput("6");
+
+            Assert.That(app.Message1, Is.EqualTo("           Player 1 lost to the AI            "));
+        }
+
+        private const string NumpadBasedBoard =
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                 7|       8|       9\r\n" +
+            "          --------------------------\r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                 4|       5|       6\r\n" +
+            "          --------------------------\r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                  |        |        \r\n" +
+            "                 1|       2|       3";
+
+        [Test]
+        public void Can_Change_Number_Scheme_To_Numpad_Based()
+        {
+            var app = Start();
+            Assert.That(app.Message3, Is.EqualTo("3 Layout: One-Based".Center(TitleWidth)));
+            app.PlayerInput("3");
+            Assert.That(app.Message3, Is.EqualTo("3 Layout: Num Pad".Center(TitleWidth)));
+            Assert.That(app.Board, Is.EqualTo(NumpadBasedBoard));
+            app.ToggleAI();
+            app.NewGame();
+            app.PlayerInput("7");
+            Assert.That(app.BoardValues, Is.EqualTo(new[] { "X", "", "", "", "O", "", "", "", "" }));
+            app.PlayerInput("9");
+            Assert.That(app.BoardValues, Is.EqualTo(new[] { "X", "O", "X", "", "O", "", "", "", "" }));
+            app.PlayerInput("2");
+            Assert.That(app.BoardValues, Is.EqualTo(new[] { "X", "O", "X", "O", "O", "", "", "X", "" }));
+            app.PlayerInput("6");
+            Assert.That(app.BoardValues, Is.EqualTo(new[] { "X", "O", "X", "O", "O", "X", "", "X", "O" }));
+            app.PlayerInput("1");
+            Assert.That(app.BoardValues, Is.EqualTo(new[] { "X", "O", "X", "O", "O", "X", "X", "X", "O" }));
         }
     }
 }

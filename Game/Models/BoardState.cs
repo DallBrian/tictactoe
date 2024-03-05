@@ -5,7 +5,7 @@
         public static readonly string[] ValidInput = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
         public Square[] Squares = { new(0), new(1), new(2), new(3), new(4), new(5), new(6), new(7), new(8) };
-
+        
         public string[] Values => Squares.Select(s => s.Value).ToArray();
 
         public Square[] GetRowAt(int index)
@@ -57,6 +57,27 @@
     {
         public int Index { get; }
 
+        public string GetDisplayValue(string layout)
+        {
+            return layout switch
+            {
+                Layout.OneBased => (Index + 1).ToString(),
+                Layout.NumPad => Index switch
+                {
+                    0 => "7",
+                    1 => "8",
+                    2 => "9",
+                    3 => "4",
+                    4 => "5",
+                    5 => "6",
+                    6 => "1",
+                    7 => "2",
+                    8 => "3"
+                },
+                _ => throw new NotImplementedException($"Layout '{layout}' is not implemented."),
+            };
+        }
+
         public int Row { get; }
 
         public int Column { get; }
@@ -95,5 +116,12 @@
         {
             return string.IsNullOrEmpty(Value) ? " " : Value;
         }
+    }
+
+    public static class Layout
+    {
+        public static string[] Layouts => new[] { OneBased, NumPad };
+        public const string OneBased = "One-Based";
+        public const string NumPad = "Num Pad";
     }
 }

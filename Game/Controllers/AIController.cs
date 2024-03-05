@@ -20,8 +20,8 @@ namespace TicTacToe.Controllers
             for (var i = 0; i < 9; i++)
             {
                 if (!State.Board.Squares[i].IsEmpty) continue;
-                if (State.Board.DoesMoveCauseAWin(i, State.CurrentPlayer.Mark)) return i + 1;
-                if (State.Board.DoesMoveCauseAWin(i, State.NextPlayer.Mark)) return i + 1;
+                if (State.Board.DoesMoveCauseAWin(i, State.CurrentPlayer.Mark)) return i;
+                if (State.Board.DoesMoveCauseAWin(i, State.NextPlayer.Mark)) return i;
 
                 var wins = State.Board.PossibleWins(i, State.CurrentPlayer.Mark);
                 if (wins <= totalPossibleWins) continue;
@@ -29,7 +29,7 @@ namespace TicTacToe.Controllers
                 totalPossibleWins = wins;
             }
 
-            return topIndex + 1;
+            return topIndex;
         }
     }
 }

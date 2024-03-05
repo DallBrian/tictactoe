@@ -3,9 +3,9 @@
     [Serializable]
     public class GameState
     {
-        public Player CurrentPlayer { get; set; } = new() { Id = 1, Name = "1", Mark = "X" };
+        public Player CurrentPlayer { get; set; } = new() { Id = 1, Name = "Player 1", Mark = "X" };
 
-        public Player NextPlayer { get; set; } = new() { Id = 2, Name = "2", Mark = "O" };
+        public Player NextPlayer { get; set; } = new() { Id = 2, Name = "Player 2", Mark = "O" };
 
         public Errors Errors { get; } = new();
 
@@ -18,6 +18,8 @@
         public bool IsActiveGame { get; set; } = false;
 
         public bool IsPaused { get; set; } = false;
+
+        public string CurrentLayout { get; set; } = Layout.Layouts[0];
     }
 
     public class Errors
