@@ -1,4 +1,6 @@
-﻿namespace TicTacToe.Models
+﻿using TicTacToe.Utilities;
+
+namespace TicTacToe.Models
 {
     public class BoardState
     {
@@ -10,9 +12,9 @@
 
         public Square[] GetRowAt(int index)
         {
-            return Squares.Where(s => s.Row == Squares[index].Row).ToArray();
+            return Squares.Where(square => square.Row == Squares[index].Row).ToArray();
         }
-
+        
         public string[] GetRowContaining(int index)
         {
             return GetRowAt(index).Select(s => s.Value).ToArray();
@@ -51,7 +53,30 @@
                 ? GetRightDiagonalSquares().Select(s => s.Value).ToArray()
                 : null;
         }
-    }
+
+        public bool DoesMoveCauseAWin(int index, string playerMark)
+        {
+	        if (GetColAt(index).IsWinningMove(index, playerMark)) return true;
+	        if (GetRowAt(index).IsWinningMove(index, playerMark)) return true;
+	        if (GetLeftDiagonalSquares().IsWinningMove(index, playerMark)) return true;
+	        if (GetRightDiagonalSquares().IsWinningMove(index, playerMark)) return true;
+	        return false;
+        }
+
+        public int PossibleWins(int index, string playerMark)
+        {
+	        int wins = 0;
+	        if (GetRowAt(index).All(s => s.IsEmpty || s.Value == playerMark)) wins++;
+	        if (GetColAt(index).All(s => s.IsEmpty || s.Value == playerMark)) wins++;
+	        if (GetLeftDiagonalContaining(index) is not null)
+		        if (GetLeftDiagonalSquares().All(s => s.IsEmpty || s.Value == playerMark))
+			        wins++;
+	        if (GetRightDiagonalContaining(index) is not null)
+		        if (GetRightDiagonalSquares().All(s => s.IsEmpty || s.Value == playerMark))
+			        wins++;
+	        return wins;
+        }
+	}
 
     public class Square
     {
